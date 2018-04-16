@@ -23,6 +23,9 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
+    // RecyclerView
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+
     // Schematic dependencies for ContentProvider
     annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.6.3'
     compile 'net.simonvt.schematic:schematic:0.6.3'
