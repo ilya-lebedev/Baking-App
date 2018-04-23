@@ -17,12 +17,60 @@ package io.github.ilya_lebedev.bakingapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
-public class MainActivity extends AppCompatActivity {
+import io.github.ilya_lebedev.bakingapp.data.BakingContract;
+
+/**
+ * MainActivity
+ * Main activity of the app.
+ * Represents list of the recipes.
+ */
+public class MainActivity extends AppCompatActivity
+        implements RecipeAdapter.RecipeAdapterOnClickHandler {
+
+    /*
+     * The columns which is needed for displaying list of recipes within MainActivity.
+     */
+    public static final String[] MAIN_RECIPE_PROJECTION = {
+            BakingContract.Recipe.BAKING_ID,
+            BakingContract.Recipe.NAME
+    };
+
+    /*
+     * This indices representing the values in the array of String above.
+     * Uses for more quickly access to the data from query.
+     * WARN: If the order or the contents of the Strings above changes,
+     * these indices must be adjust to match the changes.
+     */
+    public static final int INDEX_RECIPE_BAKING_ID = 0;
+    public static final int INDEX_RECIPE_NAME = 1;
+
+    private RecyclerView mRecyclerView;
+
+    private RecipeAdapter mRecipeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRecyclerView = findViewById(R.id.rv_recipes);
+
+        mRecipeAdapter = new RecipeAdapter(this, this);
+
+        final GridLayoutManager layoutManager =
+                new GridLayoutManager(this, 2);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mRecyclerView.setAdapter(mRecipeAdapter);
     }
+
+    @Override
+    public void onClick(int recipeBakingId) {
+        // TODO
+    }
+
 }
