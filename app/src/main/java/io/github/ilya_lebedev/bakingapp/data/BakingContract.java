@@ -82,7 +82,6 @@ public class BakingContract {
 
         @DataType(INTEGER)
         @NotNull
-        @Unique(onConflict = ConflictResolutionType.REPLACE)
         String BAKING_ID = "baking_id";
 
         @DataType(TEXT)
