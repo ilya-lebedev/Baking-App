@@ -15,9 +15,11 @@
  */
 package io.github.ilya_lebedev.bakingapp;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,8 @@ import io.github.ilya_lebedev.bakingapp.data.BakingContract;
  */
 public class RecipeFragment extends Fragment
         implements RecipeStepAdapter.RecipeStepAdapterOnClickHandler {
+
+    public static final String LOG_TAG = RecipeFragment.class.getSimpleName();
 
     /*
      * The columns which is needed for displaying list of steps within RecipeFragment.
@@ -47,6 +51,8 @@ public class RecipeFragment extends Fragment
     public static final int INDEX_STEP_BAKING_ID = 0;
     public static final int INDEX_STEP_SHORT_DESCRIPTION = 1;
 
+    private Uri mRecipeUri;
+
     // Mandatory empty constructor
     public RecipeFragment() {
     }
@@ -60,6 +66,8 @@ public class RecipeFragment extends Fragment
         // Inflate fragment layout
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
 
+        Log.d(LOG_TAG, mRecipeUri.toString());
+
         return rootView;
     }
 
@@ -67,4 +75,9 @@ public class RecipeFragment extends Fragment
     public void onClick(int stepBakingId) {
         // TODO
     }
+
+    public void setRecipeUri(Uri recipeUri) {
+        mRecipeUri = recipeUri;
+    }
+
 }

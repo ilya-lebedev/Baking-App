@@ -44,6 +44,7 @@ public class RecipeActivity extends AppCompatActivity {
         Log.d(LOG_TAG, mUri.toString());
 
         RecipeFragment recipeFragment = new RecipeFragment();
+        recipeFragment.setRecipeUri(mUri);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
