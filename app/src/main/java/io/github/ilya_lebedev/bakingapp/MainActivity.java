@@ -15,12 +15,19 @@
  */
 package io.github.ilya_lebedev.bakingapp;
 
+import android.database.Cursor;
+import android.net.Uri;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import io.github.ilya_lebedev.bakingapp.data.BakingContract;
+import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
+import io.github.ilya_lebedev.bakingapp.utilities.FakeBakingDataUtils;
 
 /**
  * MainActivity
@@ -28,7 +35,8 @@ import io.github.ilya_lebedev.bakingapp.data.BakingContract;
  * Represents list of the recipes.
  */
 public class MainActivity extends AppCompatActivity
-        implements RecipeAdapter.RecipeAdapterOnClickHandler {
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        RecipeAdapter.RecipeAdapterOnClickHandler {
 
     /*
      * The columns which is needed for displaying list of recipes within MainActivity.
@@ -46,6 +54,8 @@ public class MainActivity extends AppCompatActivity
      */
     public static final int INDEX_RECIPE_BAKING_ID = 0;
     public static final int INDEX_RECIPE_NAME = 1;
+
+    private static final int ID_RECIPE_LOADER = 91;
 
     private RecyclerView mRecyclerView;
 
@@ -66,6 +76,44 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(layoutManager);
 
         mRecyclerView.setAdapter(mRecipeAdapter);
+
+        getSupportLoaderManager().initLoader(ID_RECIPE_LOADER, null, this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
+
+        switch (loaderId) {
+
+            case ID_RECIPE_LOADER: {
+                Uri uri = BakingProvider.Recipe.RECIPE;
+
+                return new CursorLoader(this,
+                        uri,
+                        MAIN_RECIPE_PROJECTION,
+                        null,
+                        null,
+                        null);
+            }
+
+            default:
+                throw new RuntimeException("Loader not implemented: " + loaderId);
+        }
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        mRecipeAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mRecipeAdapter.swapCursor(null);
     }
 
     @Override
