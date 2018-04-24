@@ -22,10 +22,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import io.github.ilya_lebedev.bakingapp.data.BakingContract;
+
 /**
  * RecipeFragment
  */
-public class RecipeFragment extends Fragment {
+public class RecipeFragment extends Fragment
+        implements RecipeStepAdapter.RecipeStepAdapterOnClickHandler {
+
+    /*
+     * The columns which is needed for displaying list of steps within RecipeFragment.
+     */
+    public static final String[] RECIPE_STEP_PROJECTION = {
+            BakingContract.Step.BAKING_ID,
+            BakingContract.Step.SHORT_DESCRIPTION
+    };
+
+    /*
+     * This indices representing the values in the array of String above.
+     * Uses for more quickly access to the data from query.
+     * WARN: If the order or the contents of the Strings above changes,
+     * these indices must be adjust to match the changes.
+     */
+    public static final int INDEX_STEP_BAKING_ID = 0;
+    public static final int INDEX_STEP_SHORT_DESCRIPTION = 1;
 
     // Mandatory empty constructor
     public RecipeFragment() {
@@ -43,4 +63,8 @@ public class RecipeFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onClick(int stepBakingId) {
+        // TODO
+    }
 }
