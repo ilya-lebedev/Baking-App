@@ -36,7 +36,7 @@ import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
  */
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>,
-        RecipeAdapter.RecipeAdapterOnClickHandler {
+        MainRecipeAdapter.RecipeAdapterOnClickHandler {
 
     /*
      * The columns which is needed for displaying list of recipes within MainActivity.
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
     private RecyclerView mRecyclerView;
 
-    private RecipeAdapter mRecipeAdapter;
+    private MainRecipeAdapter mRecipeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity
 
         mRecyclerView = findViewById(R.id.rv_recipes);
 
-        mRecipeAdapter = new RecipeAdapter(this, this);
+        mRecipeAdapter = new MainRecipeAdapter(this, this);
 
         final GridLayoutManager layoutManager =
                 new GridLayoutManager(this, 2);

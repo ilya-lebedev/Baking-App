@@ -25,17 +25,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * {@link RecipeAdapter} exposes a list of recipes
+ * {@link MainRecipeAdapter} exposes a list of recipes
  * from a {@link android.database.Cursor} to a {@link android.support.v7.widget.RecyclerView}
  */
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterViewHolder> {
+public class MainRecipeAdapter extends RecyclerView.Adapter<MainRecipeAdapter.RecipeAdapterViewHolder> {
 
     private Context mContext;
     private Cursor mCursor;
 
     final private RecipeAdapterOnClickHandler mClickHandler;
 
-    public RecipeAdapter(@NonNull Context context, RecipeAdapterOnClickHandler clickHandler) {
+    public MainRecipeAdapter(@NonNull Context context, RecipeAdapterOnClickHandler clickHandler) {
         mContext = context;
         mClickHandler = clickHandler;
     }
@@ -65,9 +65,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     }
 
     /**
-     * Swap the cursor used by RecipeAdapter for its recipes data.
+     * Swap the cursor used by MainRecipeAdapter for its recipes data.
      *
-     * @param cursor the new cursor to use as RecipeAdapter's data source
+     * @param cursor the new cursor to use as MainRecipeAdapter's data source
      */
     public void swapCursor(Cursor cursor) {
         mCursor = cursor;
