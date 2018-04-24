@@ -39,6 +39,16 @@ public class BakingProvider {
                 defaultSort = BakingContract.Recipe.NAME + " ASC")
         public static final Uri RECIPE = Uri.parse("content://" + AUTHORITY + "/recipe");
 
+        @InexactContentUri(
+                path = "recipe/#",
+                name = "RECIPE_WITH_BAKING_ID",
+                type = "vnd.android.cursor.item/recipe",
+                whereColumn = BakingContract.Recipe.BAKING_ID,
+                pathSegment = 1)
+        public static Uri withRecipeBakingId(long id) {
+            return Uri.parse("content://" + AUTHORITY + "/recipe/" + id);
+        }
+
     }
 
     @TableEndpoint(table = BakingDatabase.INGREDIENT)
