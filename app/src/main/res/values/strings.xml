@@ -1,5 +1,5 @@
 <!--
-     Copyright (C) 2016 Ilya Lebedev
+     Copyright (C) 2018 Ilya Lebedev
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,4 +15,5 @@
 -->
 <resources>
     <string name="app_name">Baking App</string>
+    <string name="main_activity_title">Baking Time</string>
 </resources>
