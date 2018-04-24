@@ -15,6 +15,7 @@
  */
 package io.github.ilya_lebedev.bakingapp;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
@@ -27,7 +28,6 @@ import android.support.v7.widget.RecyclerView;
 
 import io.github.ilya_lebedev.bakingapp.data.BakingContract;
 import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
-import io.github.ilya_lebedev.bakingapp.utilities.FakeBakingDataUtils;
 
 /**
  * MainActivity
@@ -118,7 +118,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(int recipeBakingId) {
-        // TODO
+        Intent intent = new Intent(this, RecipeActivity.class);
+        Uri uri = BakingProvider.Recipe.withRecipeBakingId(recipeBakingId);
+        intent.setData(uri);
+        startActivity(intent);
     }
 
 }
