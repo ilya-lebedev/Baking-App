@@ -102,7 +102,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            int stepBakingId = mCursor.getInt(RecipeFragment.INDEX_STEP_BAKING_ID);
+            int stepBakingId = mCursor.getInt(RecipeFragment.INDEX_STEP_ID);
             mClickHandler.onClick(stepBakingId);
         }
 

@@ -15,52 +15,36 @@
  */
 package io.github.ilya_lebedev.bakingapp;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
 
 /**
- * RecipeActivity
+ * StepActivity
  */
-public class RecipeActivity extends AppCompatActivity implements RecipeFragment.OnStepClickListener {
-
-    public static final String LOG_TAG = RecipeActivity.class.getSimpleName();
+public class StepActivity extends AppCompatActivity {
 
     private Uri mUri;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe);
+        setContentView(R.layout.activity_step);
 
         mUri = getIntent().getData();
         if (mUri == null) {
-            throw new NullPointerException("URI for RecipeActivity cannot be null");
+            throw new NullPointerException("URI for StepActivity cannot be null");
         }
 
-        Log.d(LOG_TAG, mUri.toString());
-
-        RecipeFragment recipeFragment = new RecipeFragment();
-        recipeFragment.setRecipeUri(mUri);
+        StepFragment stepFragment = new StepFragment();
+        stepFragment.setRecipeUri(mUri);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.recipe_container, recipeFragment)
+                .add(R.id.step_container, stepFragment)
                 .commit();
-    }
-
-    @Override
-    public void onStepSelected(int stepId) {
-        Intent intent = new Intent(this, StepActivity.class);
-        Uri uri = BakingProvider.Step.withId(stepId);
-        intent.setData(uri);
-        startActivity(intent);
     }
 
 }

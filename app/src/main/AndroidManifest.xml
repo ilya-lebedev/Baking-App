@@ -38,11 +38,21 @@
 
         <activity
             android:name=".RecipeActivity"
+            android:launchMode="singleTop"
             android:label="@string/recipe_activity_title"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".StepActivity"
+            android:label="@string/step_activity_title"
+            android:parentActivityName=".RecipeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".RecipeActivity" />
         </activity>
 
         <provider

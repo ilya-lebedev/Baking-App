@@ -52,7 +52,7 @@ public class RecipeFragment extends Fragment
      * The columns which is needed for displaying list of steps within RecipeFragment.
      */
     public static final String[] RECIPE_STEP_PROJECTION = {
-            BakingContract.Step.BAKING_ID,
+            BakingContract.Step._ID,
             BakingContract.Step.SHORT_DESCRIPTION
     };
 
@@ -62,7 +62,7 @@ public class RecipeFragment extends Fragment
      * WARN: If the order or the contents of the Strings above changes,
      * these indices must be adjust to match the changes.
      */
-    public static final int INDEX_STEP_BAKING_ID = 0;
+    public static final int INDEX_STEP_ID = 0;
     public static final int INDEX_STEP_SHORT_DESCRIPTION = 1;
 
     /*
@@ -203,8 +203,8 @@ public class RecipeFragment extends Fragment
     }
 
     @Override
-    public void onClick(int stepBakingId) {
-        mOnStepClickListener.onStepSelected(stepBakingId);
+    public void onClick(int stepId) {
+        mOnStepClickListener.onStepSelected(stepId);
     }
 
     public void setRecipeUri(Uri recipeUri) {
@@ -235,7 +235,7 @@ public class RecipeFragment extends Fragment
 
     // OnStepClickListener interface, calls a method in the host activity named onStepSelected
     public interface OnStepClickListener {
-        void onStepSelected(int stepBakingId);
+        void onStepSelected(int stepId);
     }
 
 }
