@@ -82,6 +82,16 @@ public class BakingProvider {
         public static final Uri STEP = Uri.parse("content://" + AUTHORITY + "/step");
 
         @InexactContentUri(
+                path = "step/#",
+                name = "STEP_WITH_ID",
+                type = "vnd.android.cursor.item/step",
+                whereColumn = BakingContract.Step._ID,
+                pathSegment = 1)
+        public static Uri withId(long id) {
+            return Uri.parse("content://" + AUTHORITY + "/step/" + id);
+        }
+
+        @InexactContentUri(
                 path = "step/recipe/#",
                 name = "RECIPE_STEP",
                 type = "vnd.android.cursor.dir/step/recipe",
