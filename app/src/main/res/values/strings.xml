@@ -17,4 +17,5 @@
     <string name="app_name">Baking App</string>
     <string name="main_activity_title">Baking Time</string>
     <string name="recipe_activity_title">Recipe</string>
+    <string name="ingredients_label">Ingredients</string>
 </resources>
