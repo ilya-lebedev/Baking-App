@@ -55,7 +55,7 @@ public class BakingContract {
         @AutoIncrement
         String _ID = "_id";
 
-        @DataType(INTEGER)
+        @DataType(TEXT)
         @NotNull
         String QUANTITY = "quantity";
 
