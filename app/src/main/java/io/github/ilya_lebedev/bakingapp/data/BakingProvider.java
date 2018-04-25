@@ -65,7 +65,7 @@ public class BakingProvider {
                 name = "RECIPE_INGREDIENT",
                 type = "vnd.android.cursor.dir/ingredient/recipe",
                 whereColumn = BakingContract.Ingredient.BAKING_RECIPE_ID,
-                pathSegment = 1)
+                pathSegment = 2)
         public static Uri withRecipeBakingId(long id) {
             return Uri.parse("content://" + AUTHORITY + "/ingredient/recipe/" + id);
         }
@@ -86,7 +86,7 @@ public class BakingProvider {
                 name = "RECIPE_STEP",
                 type = "vnd.android.cursor.dir/step/recipe",
                 whereColumn = BakingContract.Step.BAKING_RECIPE_ID,
-                pathSegment = 1)
+                pathSegment = 2)
         public static Uri withRecipeBakingId(long id) {
             return Uri.parse("content://" + AUTHORITY + "/step/recipe/" + id);
         }
