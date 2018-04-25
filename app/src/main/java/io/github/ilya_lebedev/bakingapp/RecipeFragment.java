@@ -24,12 +24,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import io.github.ilya_lebedev.bakingapp.data.BakingContract;
 import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
@@ -60,7 +64,30 @@ public class RecipeFragment extends Fragment
     public static final int INDEX_STEP_BAKING_ID = 0;
     public static final int INDEX_STEP_SHORT_DESCRIPTION = 1;
 
+    /*
+     * The columns which is needed for displaying list of ingredients within RecipeFragment.
+     */
+    public static final String[] RECIPE_INGREDIENT_PROJECTION = {
+            BakingContract.Ingredient.INGREDIENT,
+            BakingContract.Ingredient.QUANTITY,
+            BakingContract.Ingredient.MEASURE
+    };
+
+    /*
+     * This indices representing the values in the array of String above.
+     * Uses for more quickly access to the data from query.
+     * WARN: If the order or the contents of the Strings above changes,
+     * these indices must be adjust to match the changes.
+     */
+    public static final int INDEX_INGREDIENT_INGREDIENT = 0;
+    public static final int INDEX_INGREDIENT_QUANTITY = 1;
+    public static final int INDEX_INGREDIENT_MEASURE = 2;
+
     private static final int ID_STEP_LOADER = 78;
+    private static final int ID_INGREDIENT_LOADER = 79;
+
+    private NestedScrollView mNestedSv;
+    private TableLayout mIngredientTable;
 
     private RecyclerView mRecyclerView;
 
@@ -81,7 +108,8 @@ public class RecipeFragment extends Fragment
         // Inflate fragment layout
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
 
-        Log.d(LOG_TAG, mRecipeUri.toString());
+        mNestedSv = rootView.findViewById(R.id.ns_view);
+        mIngredientTable = rootView.findViewById(R.id.tl_ingredients);
 
         mRecyclerView = rootView.findViewById(R.id.rv_steps);
         mStepAdapter = new RecipeStepAdapter(getContext(), this);
@@ -93,6 +121,7 @@ public class RecipeFragment extends Fragment
         mRecyclerView.setNestedScrollingEnabled(false);
 
         getLoaderManager().initLoader(ID_STEP_LOADER, null, this);
+        getLoaderManager().initLoader(ID_INGREDIENT_LOADER, null, this);
 
         return rootView;
     }
@@ -115,6 +144,18 @@ public class RecipeFragment extends Fragment
                         BakingContract.Step.BAKING_ID + " ASC");
             }
 
+            case ID_INGREDIENT_LOADER: {
+                long recipeBakingId = ContentUris.parseId(mRecipeUri);
+                Uri uri = BakingProvider.Ingredient.withRecipeBakingId(recipeBakingId);
+
+                return new CursorLoader(getContext(),
+                        uri,
+                        RECIPE_INGREDIENT_PROJECTION,
+                        null,
+                        null,
+                        null);
+            }
+
             default:
                 throw new RuntimeException("Loader not implemented: " + loaderId);
 
@@ -124,8 +165,20 @@ public class RecipeFragment extends Fragment
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        Log.d(LOG_TAG, "Cursor: " + cursor.getCount());
-        mStepAdapter.swapCursor(cursor);
+        int loaderId = loader.getId();
+
+        switch (loaderId) {
+
+            case ID_STEP_LOADER:
+                mStepAdapter.swapCursor(cursor);
+                break;
+
+            case ID_INGREDIENT_LOADER:
+                fillIngredientTable(cursor);
+                break;
+
+        }
+
     }
 
     @Override
@@ -140,6 +193,28 @@ public class RecipeFragment extends Fragment
 
     public void setRecipeUri(Uri recipeUri) {
         mRecipeUri = recipeUri;
+    }
+
+    private void fillIngredientTable(Cursor cursor) {
+        cursor.moveToPosition(-1);
+        while (cursor.moveToNext()) {
+            String ingredient = cursor.getString(INDEX_INGREDIENT_INGREDIENT);
+            String quantity = cursor.getString(INDEX_INGREDIENT_QUANTITY);
+            String measure = cursor.getString(INDEX_INGREDIENT_MEASURE);
+
+            TextView ingredientTv = new TextView(getContext());
+            ingredientTv.setText(ingredient);
+
+            TextView quantityTv = new TextView(getContext());
+            quantityTv.setText(getContext().getString(R.string.format_quantity, quantity, measure));
+
+            TableRow ingredientTr = new TableRow(getContext());
+            ingredientTr.addView(ingredientTv);
+            ingredientTr.addView(quantityTv);
+
+            mIngredientTable.addView(ingredientTr);
+        }
+        cursor.close();
     }
 
 }
