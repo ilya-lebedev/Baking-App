@@ -15,22 +15,31 @@
  */
 package io.github.ilya_lebedev.bakingapp;
 
+import android.content.ContentUris;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import io.github.ilya_lebedev.bakingapp.data.BakingContract;
+import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
 
 /**
  * RecipeFragment
  */
 public class RecipeFragment extends Fragment
-        implements RecipeStepAdapter.RecipeStepAdapterOnClickHandler {
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        RecipeStepAdapter.RecipeStepAdapterOnClickHandler {
 
     public static final String LOG_TAG = RecipeFragment.class.getSimpleName();
 
@@ -51,6 +60,12 @@ public class RecipeFragment extends Fragment
     public static final int INDEX_STEP_BAKING_ID = 0;
     public static final int INDEX_STEP_SHORT_DESCRIPTION = 1;
 
+    private static final int ID_STEP_LOADER = 78;
+
+    private RecyclerView mRecyclerView;
+
+    private RecipeStepAdapter mStepAdapter;
+
     private Uri mRecipeUri;
 
     // Mandatory empty constructor
@@ -68,7 +83,54 @@ public class RecipeFragment extends Fragment
 
         Log.d(LOG_TAG, mRecipeUri.toString());
 
+        mRecyclerView = rootView.findViewById(R.id.rv_steps);
+        mStepAdapter = new RecipeStepAdapter(getContext(), this);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        mRecyclerView.setAdapter(mStepAdapter);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setNestedScrollingEnabled(false);
+
+        getLoaderManager().initLoader(ID_STEP_LOADER, null, this);
+
         return rootView;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
+
+        switch (loaderId) {
+
+            case ID_STEP_LOADER: {
+                long recipeBakingId = ContentUris.parseId(mRecipeUri);
+                Uri uri = BakingProvider.Step.withRecipeBakingId(recipeBakingId);
+                Log.d(LOG_TAG, uri.toString());
+
+                return new CursorLoader(getContext(),
+                        uri,
+                        RECIPE_STEP_PROJECTION,
+                        null,
+                        null,
+                        BakingContract.Step.BAKING_ID + " ASC");
+            }
+
+            default:
+                throw new RuntimeException("Loader not implemented: " + loaderId);
+
+        }
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        Log.d(LOG_TAG, "Cursor: " + cursor.getCount());
+        mStepAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mStepAdapter.swapCursor(null);
     }
 
     @Override
