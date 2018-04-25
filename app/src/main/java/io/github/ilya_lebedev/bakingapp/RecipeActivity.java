@@ -25,7 +25,7 @@ import android.util.Log;
 /**
  * RecipeActivity
  */
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity implements RecipeFragment.OnStepClickListener {
 
     public static final String LOG_TAG = RecipeActivity.class.getSimpleName();
 
@@ -52,4 +52,8 @@ public class RecipeActivity extends AppCompatActivity {
                 .commit();
     }
 
+    @Override
+    public void onStepSelected(int stepBakingId) {
+        // TODO
+    }
 }

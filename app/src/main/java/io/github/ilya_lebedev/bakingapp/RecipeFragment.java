@@ -16,6 +16,7 @@
 package io.github.ilya_lebedev.bakingapp;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -95,8 +96,23 @@ public class RecipeFragment extends Fragment
 
     private Uri mRecipeUri;
 
+    // Define a new interface OnStepClickListener that triggers a callback in the host activity
+    private OnStepClickListener mOnStepClickListener;
+
     // Mandatory empty constructor
     public RecipeFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mOnStepClickListener = (OnStepClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnStepClickListener");
+        }
     }
 
     // Inflates the view of recipe
@@ -188,7 +204,7 @@ public class RecipeFragment extends Fragment
 
     @Override
     public void onClick(int stepBakingId) {
-        // TODO
+        mOnStepClickListener.onStepSelected(stepBakingId);
     }
 
     public void setRecipeUri(Uri recipeUri) {
@@ -215,6 +231,11 @@ public class RecipeFragment extends Fragment
             mIngredientTable.addView(ingredientTr);
         }
         cursor.close();
+    }
+
+    // OnStepClickListener interface, calls a method in the host activity named onStepSelected
+    public interface OnStepClickListener {
+        void onStepSelected(int stepBakingId);
     }
 
 }
