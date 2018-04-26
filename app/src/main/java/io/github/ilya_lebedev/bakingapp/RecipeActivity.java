@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
 
@@ -34,6 +33,8 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
     private Uri mUri;
 
+    private boolean mTwoPaneMode;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,19 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
             throw new NullPointerException("URI for RecipeActivity cannot be null");
         }
 
-        Log.d(LOG_TAG, mUri.toString());
+        if (findViewById(R.id.recipe_linear_layout) != null) {
+            mTwoPaneMode = true;
+
+            StepFragment stepFragment = new StepFragment();
+            stepFragment.setRecipeUri(null);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.step_container, stepFragment)
+                    .commit();
+        } else {
+            mTwoPaneMode = false;
+        }
 
         RecipeFragment recipeFragment = new RecipeFragment();
         recipeFragment.setRecipeUri(mUri);
@@ -57,10 +70,39 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
     @Override
     public void onStepSelected(int stepId) {
+        Uri stepUri = BakingProvider.Step.withId(stepId);
+
+        if (mTwoPaneMode) {
+            replaceStepFragment(stepUri);
+        } else {
+            startStepActivity(stepUri);
+        }
+    }
+
+    /**
+     * Start step activity
+     *
+     * @param stepUri URI of the step
+     */
+    private void startStepActivity(Uri stepUri) {
         Intent intent = new Intent(this, StepActivity.class);
-        Uri uri = BakingProvider.Step.withId(stepId);
-        intent.setData(uri);
+        intent.setData(stepUri);
         startActivity(intent);
+    }
+
+    /**
+     * Replace step fragment
+     *
+     * @param stepUri URI of the step
+     */
+    private void replaceStepFragment(Uri stepUri) {
+        StepFragment stepFragment = new StepFragment();
+        stepFragment.setRecipeUri(stepUri);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.step_container, stepFragment)
+                .commit();
     }
 
 }
