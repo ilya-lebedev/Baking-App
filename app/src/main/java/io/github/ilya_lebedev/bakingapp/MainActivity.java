@@ -70,8 +70,9 @@ public class MainActivity extends AppCompatActivity
 
         mRecipeAdapter = new MainRecipeAdapter(this, this);
 
-        final GridLayoutManager layoutManager =
-                new GridLayoutManager(this, 2);
+        final GridLayoutManager layoutManager = new GridLayoutManager(
+                this,
+                getResources().getInteger(R.integer.recipe_grid_span_count));
 
         mRecyclerView.setLayoutManager(layoutManager);
 
