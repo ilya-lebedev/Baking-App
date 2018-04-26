@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView;
 
 import io.github.ilya_lebedev.bakingapp.data.BakingContract;
 import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
+import io.github.ilya_lebedev.bakingapp.sync.BakingSyncUtils;
 
 /**
  * MainActivity
@@ -79,6 +80,8 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mRecipeAdapter);
 
         getSupportLoaderManager().initLoader(ID_RECIPE_LOADER, null, this);
+
+        BakingSyncUtils.initialize(this);
     }
 
     @Override
