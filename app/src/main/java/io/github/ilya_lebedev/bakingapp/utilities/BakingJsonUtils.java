@@ -89,11 +89,17 @@ public class BakingJsonUtils {
                 int stepBakingId = stepJsonObject.getInt(STEP_BAKING_ID);
                 String stepShortDescription = stepJsonObject.getString(STEP_SHORT_DESCRIPTION);
                 String stepDescription = stepJsonObject.getString(STEP_DESCRIPTION);
-                String stepVideoUrl = stepJsonObject.getString(STEP_VIDEO_URL);
+                String stepVideoUrl = null;
+                if (stepJsonObject.has(STEP_VIDEO_URL)) {
+                    stepVideoUrl = stepJsonObject.getString(STEP_VIDEO_URL);
+                }
                 if (TextUtils.isEmpty(stepVideoUrl)) {
                     stepVideoUrl = null;
                 }
-                String stepThumbnailUrl = stepJsonObject.getString(STEP_THUMBNAIL_URL);
+                String stepThumbnailUrl = null;
+                if (stepJsonObject.has(STEP_THUMBNAIL_URL)) {
+                    stepThumbnailUrl = stepJsonObject.getString(STEP_THUMBNAIL_URL);
+                }
                 if (TextUtils.isEmpty(stepThumbnailUrl)) {
                     stepThumbnailUrl = null;
                 }
