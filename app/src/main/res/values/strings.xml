@@ -19,6 +19,7 @@
     <string name="recipe_activity_title">Recipe</string>
     <string name="step_activity_title">Step</string>
     <string name="ingredients_label">Ingredients</string>
+    <string name="steps_label">Steps</string>
     <!-- Quantity format -->
     <string name="format_quantity">
         <xliff:g id="quantity">%1$s</xliff:g> <xliff:g id="measure">%2$s</xliff:g>

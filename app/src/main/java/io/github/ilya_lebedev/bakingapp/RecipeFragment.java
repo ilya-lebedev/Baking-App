@@ -25,16 +25,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import io.github.ilya_lebedev.bakingapp.data.BakingContract;
 import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
@@ -87,12 +84,11 @@ public class RecipeFragment extends Fragment
     private static final int ID_STEP_LOADER = 78;
     private static final int ID_INGREDIENT_LOADER = 79;
 
-    private NestedScrollView mNestedSv;
-    private TableLayout mIngredientTable;
-
     private RecyclerView mRecyclerView;
+    private RecyclerView mIngredientRecyclerView;
 
     private RecipeStepAdapter mStepAdapter;
+    private RecipeIngredientAdapter mIngredientAdapter;
 
     private Uri mRecipeUri;
 
@@ -124,9 +120,6 @@ public class RecipeFragment extends Fragment
         // Inflate fragment layout
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
 
-        mNestedSv = rootView.findViewById(R.id.ns_view);
-        mIngredientTable = rootView.findViewById(R.id.tl_ingredients);
-
         mRecyclerView = rootView.findViewById(R.id.rv_steps);
         mStepAdapter = new RecipeStepAdapter(getContext(), this);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -135,6 +128,17 @@ public class RecipeFragment extends Fragment
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setNestedScrollingEnabled(false);
+
+        mIngredientRecyclerView = rootView.findViewById(R.id.rv_ingredients);
+        mIngredientAdapter = new RecipeIngredientAdapter(getContext());
+        final LinearLayoutManager ingredientLayoutManager = new LinearLayoutManager(getContext());
+
+        mIngredientRecyclerView.setAdapter(mIngredientAdapter);
+        mIngredientRecyclerView.setLayoutManager(ingredientLayoutManager);
+        mIngredientRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                ingredientLayoutManager.getOrientation()));
+        mIngredientRecyclerView.setHasFixedSize(true);
+        mIngredientRecyclerView.setNestedScrollingEnabled(false);
 
         getLoaderManager().initLoader(ID_STEP_LOADER, null, this);
         getLoaderManager().initLoader(ID_INGREDIENT_LOADER, null, this);
@@ -190,7 +194,7 @@ public class RecipeFragment extends Fragment
                 break;
 
             case ID_INGREDIENT_LOADER:
-                fillIngredientTable(cursor);
+                mIngredientAdapter.swapCursor(cursor);
                 break;
 
         }
@@ -209,28 +213,6 @@ public class RecipeFragment extends Fragment
 
     public void setRecipeUri(Uri recipeUri) {
         mRecipeUri = recipeUri;
-    }
-
-    private void fillIngredientTable(Cursor cursor) {
-        cursor.moveToPosition(-1);
-        while (cursor.moveToNext()) {
-            String ingredient = cursor.getString(INDEX_INGREDIENT_INGREDIENT);
-            String quantity = cursor.getString(INDEX_INGREDIENT_QUANTITY);
-            String measure = cursor.getString(INDEX_INGREDIENT_MEASURE);
-
-            TextView ingredientTv = new TextView(getContext());
-            ingredientTv.setText(ingredient);
-
-            TextView quantityTv = new TextView(getContext());
-            quantityTv.setText(getContext().getString(R.string.format_quantity, quantity, measure));
-
-            TableRow ingredientTr = new TableRow(getContext());
-            ingredientTr.addView(ingredientTv);
-            ingredientTr.addView(quantityTv);
-
-            mIngredientTable.addView(ingredientTr);
-        }
-        cursor.close();
     }
 
     // OnStepClickListener interface, calls a method in the host activity named onStepSelected
