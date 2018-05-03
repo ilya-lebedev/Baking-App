@@ -24,4 +24,11 @@
     <string name="format_quantity">
         <xliff:g id="quantity">%1$s</xliff:g> <xliff:g id="measure">%2$s</xliff:g>
     </string>
+
+    <!-- - - - - - - - - - - - - - - -
+      - Used by BakingPreferences  -
+      - - - - - - - - - - - - - - - -->
+
+    <string name="pref_desired_recipe_key">desired_recipe</string>
+
 </resources>
