@@ -26,6 +26,18 @@
     </string>
 
     <!-- - - - - - - - - - - - - - - -
+      - Used by widgets  -
+      - - - - - - - - - - - - - - - -->
+    <string name="appwidget_text">Desired recipe ingredients</string>
+    <string name="add_widget">Add widget</string>
+    <string name="baking_widget_empty_view_text">Select desire recipe</string>
+
+    <!-- - - - - - - - - - - - - - - -
+      - Used by menus  -
+      - - - - - - - - - - - - - - - -->
+    <string name="action_desired_recipe">Desired recipe</string>
+
+    <!-- - - - - - - - - - - - - - - -
       - Used by BakingPreferences  -
       - - - - - - - - - - - - - - - -->
 

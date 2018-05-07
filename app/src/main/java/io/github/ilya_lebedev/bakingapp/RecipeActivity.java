@@ -15,21 +15,24 @@
  */
 package io.github.ilya_lebedev.bakingapp;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import io.github.ilya_lebedev.bakingapp.data.BakingPreferences;
 import io.github.ilya_lebedev.bakingapp.data.BakingProvider;
+import io.github.ilya_lebedev.bakingapp.widget.BakingWidgetService;
 
 /**
  * RecipeActivity
  */
 public class RecipeActivity extends AppCompatActivity implements RecipeFragment.OnStepClickListener {
-
-    public static final String LOG_TAG = RecipeActivity.class.getSimpleName();
 
     private Uri mUri;
 
@@ -45,8 +48,9 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
             throw new NullPointerException("URI for RecipeActivity cannot be null");
         }
 
-        if (findViewById(R.id.recipe_linear_layout) != null) {
-            mTwoPaneMode = true;
+        mTwoPaneMode = findViewById(R.id.recipe_linear_layout) != null;
+
+        if (mTwoPaneMode) {
 
             StepFragment stepFragment = new StepFragment();
             stepFragment.setRecipeUri(null);
@@ -55,8 +59,6 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
             fragmentManager.beginTransaction()
                     .add(R.id.step_container, stepFragment)
                     .commit();
-        } else {
-            mTwoPaneMode = false;
         }
 
         RecipeFragment recipeFragment = new RecipeFragment();
@@ -66,6 +68,72 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
         fragmentManager.beginTransaction()
                 .add(R.id.recipe_container, recipeFragment)
                 .commit();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        mUri = intent.getData();
+
+        if (mUri == null) {
+            throw new NullPointerException("URI for RecipeActivity cannot be null");
+        }
+
+        if (mTwoPaneMode) {
+
+            StepFragment stepFragment = new StepFragment();
+            stepFragment.setRecipeUri(null);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.step_container, stepFragment)
+                    .commit();
+        }
+
+        RecipeFragment recipeFragment = new RecipeFragment();
+        recipeFragment.setRecipeUri(mUri);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.recipe_container, recipeFragment)
+                .commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_recipe, menu);
+
+        int desiredRecipeId = BakingPreferences.getDesiredRecipe(this);
+        long recipeId = ContentUris.parseId(mUri);
+        MenuItem desiredMenuItem = menu.findItem(R.id.action_desired);
+        if (desiredRecipeId == recipeId) {
+            desiredMenuItem.setChecked(true);
+        } else {
+            desiredMenuItem.setChecked(false);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_desired:
+                if (item.isChecked()) {
+                    BakingPreferences.setDesiredRecipe(this, -1);
+                    item.setChecked(false);
+                } else {
+                    long recipeId = ContentUris.parseId(mUri);
+                    BakingPreferences.setDesiredRecipe(this, (int) recipeId);
+                    item.setChecked(true);
+                }
+                BakingWidgetService.startActionUpdateBakingWidgets(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
