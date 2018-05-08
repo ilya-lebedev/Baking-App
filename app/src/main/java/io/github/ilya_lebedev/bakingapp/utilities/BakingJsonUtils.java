@@ -43,7 +43,7 @@ public class BakingJsonUtils {
     private static final String STEP_BAKING_ID = "id";
     private static final String STEP_SHORT_DESCRIPTION = "shortDescription";
     private static final String STEP_DESCRIPTION = "description";
-    private static final String STEP_VIDEO_URL = "videoUrl";
+    private static final String STEP_VIDEO_URL = "videoURL";
     private static final String STEP_THUMBNAIL_URL = "thumbnailUrl";
 
     /* JSON keys of ingredient object */
