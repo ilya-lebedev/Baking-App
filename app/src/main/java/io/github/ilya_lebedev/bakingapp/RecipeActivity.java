@@ -50,34 +50,38 @@ public class RecipeActivity extends AppCompatActivity implements RecipeFragment.
 
         mTwoPaneMode = findViewById(R.id.recipe_linear_layout) != null;
 
-        if (mTwoPaneMode) {
+        if (savedInstanceState == null) {
+            if (mTwoPaneMode) {
 
-            StepFragment stepFragment = new StepFragment();
-            stepFragment.setRecipeUri(null);
+                StepFragment stepFragment = new StepFragment();
+                stepFragment.setRecipeUri(null);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .add(R.id.step_container, stepFragment)
+                        .commit();
+            }
+
+            RecipeFragment recipeFragment = new RecipeFragment();
+            recipeFragment.setRecipeUri(mUri);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .add(R.id.step_container, stepFragment)
+                    .add(R.id.recipe_container, recipeFragment)
                     .commit();
         }
-
-        RecipeFragment recipeFragment = new RecipeFragment();
-        recipeFragment.setRecipeUri(mUri);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.recipe_container, recipeFragment)
-                .commit();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        mUri = intent.getData();
+        Uri newUri = intent.getData();
 
-        if (mUri == null) {
-            throw new NullPointerException("URI for RecipeActivity cannot be null");
+        if (newUri == null) {
+            return;
+        } else {
+            mUri = newUri;
         }
 
         if (mTwoPaneMode) {
