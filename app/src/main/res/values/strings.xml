@@ -25,6 +25,8 @@
         <xliff:g id="quantity">%1$s</xliff:g> <xliff:g id="measure">%2$s</xliff:g>
     </string>
 
+    <string name="step_fragment_empty_view_text">Select step</string>
+
     <!-- - - - - - - - - - - - - - - -
       - Used by widgets  -
       - - - - - - - - - - - - - - - -->

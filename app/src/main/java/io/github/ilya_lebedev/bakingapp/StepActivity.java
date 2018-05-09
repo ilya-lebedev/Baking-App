@@ -38,13 +38,15 @@ public class StepActivity extends AppCompatActivity {
             throw new NullPointerException("URI for StepActivity cannot be null");
         }
 
-        StepFragment stepFragment = new StepFragment();
-        stepFragment.setRecipeUri(mUri);
+        if (savedInstanceState == null) {
+            StepFragment stepFragment = new StepFragment();
+            stepFragment.setRecipeUri(mUri);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.step_container, stepFragment)
-                .commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.step_container, stepFragment)
+                    .commit();
+        }
     }
 
 }
