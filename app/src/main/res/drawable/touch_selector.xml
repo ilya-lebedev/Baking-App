@@ -14,21 +14,16 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:id="@+id/ll_step_container"
-    android:background="@drawable/touch_selector"
-    android:layout_marginBottom="8dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/tv_step_short_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        tools:text="Combine dry ingredients." />
+    <item android:drawable="@color/activated_state"
+          android:state_activated="true"
+          android:state_focused="false"/>
 
-</LinearLayout>
+    <item android:drawable="@color/activated_state"
+        android:state_selected="true"/>
+
+    <!-- Default state with no interaction -->
+    <item android:drawable="@color/default_state"/>
+
+</selector>

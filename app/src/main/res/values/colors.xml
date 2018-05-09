@@ -20,4 +20,8 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="recipe_activity_divider_color">#bcbcbc</color>
+
+    <!-- Activated state color for a step list item -->
+    <color name="activated_state">#E0E0E0</color>
+    <color name="default_state">#fafafafa</color>
 </resources>
