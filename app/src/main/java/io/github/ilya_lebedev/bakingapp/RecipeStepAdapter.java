@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 /**
  * {@link RecipeStepAdapter} exposes a list of steps
  * from a {@link android.database.Cursor} to a {@link android.support.v7.widget.RecyclerView}
@@ -32,6 +34,9 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
 
     private Context mContext;
     private Cursor mCursor;
+
+    private WeakReference<View> mSelectedView;
+    private int mSelectedPosition = -1;
 
     final private RecipeStepAdapter.RecipeStepAdapterOnClickHandler mClickHandler;
 
@@ -57,6 +62,13 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         String shortDescription = mCursor.getString(RecipeFragment.INDEX_STEP_SHORT_DESCRIPTION);
 
         holder.stepShortDescription.setText(shortDescription);
+        if (position == mSelectedPosition) {
+            holder.itemView.setSelected(true);
+            if (mSelectedView != null && mSelectedView.get() != null) {
+                mSelectedView.get().setSelected(false);
+            }
+            mSelectedView = new WeakReference<>(holder.itemView);
+        }
     }
 
     @Override
@@ -75,12 +87,16 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         notifyDataSetChanged();
     }
 
+    public void setPosition(int position) {
+        mSelectedPosition = position;
+    }
+
     /**
      * RecipeStepAdapterOnClickHandler
      * The interface that receives onClick messages.
      */
     public interface RecipeStepAdapterOnClickHandler {
-        void onClick(int stepBakingId);
+        void onClick(int stepBakingId, int adapterSelectedPosition);
     }
 
     /**
@@ -100,10 +116,19 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
 
         @Override
         public void onClick(View v) {
+            v.setSelected(true);
+
+            if (mSelectedView != null && mSelectedView.get() != null) {
+                mSelectedView.get().setSelected(false);
+            }
+
+            mSelectedView = new WeakReference<>(v);
             int adapterPosition = getAdapterPosition();
+            mSelectedPosition = adapterPosition;
+
             mCursor.moveToPosition(adapterPosition);
             int stepBakingId = mCursor.getInt(RecipeFragment.INDEX_STEP_ID);
-            mClickHandler.onClick(stepBakingId);
+            mClickHandler.onClick(stepBakingId, adapterPosition);
         }
 
     }

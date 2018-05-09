@@ -84,11 +84,15 @@ public class RecipeFragment extends Fragment
     private static final int ID_STEP_LOADER = 78;
     private static final int ID_INGREDIENT_LOADER = 79;
 
+    private static final String KEY_ADAPTER_SELECTED_POSITION = "adapter_selected_position";
+
     private RecyclerView mRecyclerView;
     private RecyclerView mIngredientRecyclerView;
 
     private RecipeStepAdapter mStepAdapter;
     private RecipeIngredientAdapter mIngredientAdapter;
+
+    private int mAdapterSelectedPosition = -1;
 
     private Uri mRecipeUri;
 
@@ -140,10 +144,22 @@ public class RecipeFragment extends Fragment
         mIngredientRecyclerView.setHasFixedSize(true);
         mIngredientRecyclerView.setNestedScrollingEnabled(false);
 
+        if (savedInstanceState != null
+                && savedInstanceState.containsKey(KEY_ADAPTER_SELECTED_POSITION)) {
+            mAdapterSelectedPosition = savedInstanceState.getInt(KEY_ADAPTER_SELECTED_POSITION);
+            mStepAdapter.setPosition(mAdapterSelectedPosition);
+        }
+
         getLoaderManager().initLoader(ID_STEP_LOADER, null, this);
         getLoaderManager().initLoader(ID_INGREDIENT_LOADER, null, this);
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(KEY_ADAPTER_SELECTED_POSITION, mAdapterSelectedPosition);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -207,8 +223,9 @@ public class RecipeFragment extends Fragment
     }
 
     @Override
-    public void onClick(int stepId) {
+    public void onClick(int stepId, int adapterSelectedPosition) {
         mOnStepClickListener.onStepSelected(stepId);
+        mAdapterSelectedPosition = adapterSelectedPosition;
     }
 
     public void setRecipeUri(Uri recipeUri) {
