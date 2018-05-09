@@ -33,6 +33,9 @@ dependencies {
     annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.6.3'
     compile 'net.simonvt.schematic:schematic:0.6.3'
 
+    // ExoPlayer
+    compile 'com.google.android.exoplayer:exoplayer:r2.2.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
